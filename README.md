@@ -20,7 +20,7 @@ A full-stack web app for discovering events and booking tickets. Guests can brow
 ## Project structure
 
 ```
-backend/    Express API (routes, services, middleware, schemas, db)
+backend/    Express API (routes, services, middleware, schemas, db, scripts)
 frontend/   React app (pages, components, context, api client)
 ```
 
@@ -100,18 +100,39 @@ Main route groups: `/api/auth`, `/api/users`, `/api/events`, `/api/bookings`, `/
 - Event status transitions: draft → published, draft → cancelled, published → cancelled, published → completed. Cancelled and completed events are locked
 - An event with active bookings can't be deleted: cancel it instead
 - Images: jpg, png or webp up to 2 MB, stored locally in `backend/uploads`
+- Booking is race-safe: the event row is locked inside a transaction, verified by `npm run test:race`
 
 ## Scripts
 
-| Where    | Command           | What it does                                                   |
-| -------- | ----------------- | -------------------------------------------------------------- |
-| backend  | `npm run dev`     | Start the API with auto-reload                                 |
-| backend  | `npm start`       | Start the API                                                  |
-| backend  | `npm run migrate` | Apply `src/db/schema.sql`                                      |
-| backend  | `npm run seed`    | Create the admin and sample events (skips events if any exist) |
-| frontend | `npm run dev`     | Start the Vite dev server                                      |
-| frontend | `npm run build`   | Production build                                               |
-| frontend | `npm run lint`    | Run ESLint                                                     |
+| Where    | Command             | What it does                                                                     |
+| -------- | ------------------- | -------------------------------------------------------------------------------- |
+| backend  | `npm run dev`       | Start the API with auto-reload                                                   |
+| backend  | `npm start`         | Start the API                                                                    |
+| backend  | `npm run migrate`   | Apply `src/db/schema.sql`                                                        |
+| backend  | `npm run seed`      | Create the admin and sample events (skips events if any exist)                   |
+| backend  | `npm run test:race` | Concurrency test: 12 simultaneous bookings for 5 tickets, exactly 5 must succeed |
+| frontend | `npm run dev`       | Start the Vite dev server                                                        |
+| frontend | `npm run build`     | Production build                                                                 |
+| frontend | `npm run lint`      | Run ESLint                                                                       |
+
+## Testing
+
+The API must be running (`npm run dev` in `backend`). The race test uses the seeded admin and a customer account, and removes the temporary event it creates.
+
+```bash
+cd backend
+npm run test:race
+```
+
+Expected output ends with three `PASS` lines. If your customer account differs from the default, set the credentials first:
+
+| Variable                               | Default                            |
+| -------------------------------------- | ---------------------------------- |
+| `API_URL`                              | `http://localhost:5000`            |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD`       | `admin@example.com` / `Admin12345` |
+| `CUSTOMER_EMAIL` / `CUSTOMER_PASSWORD` | `test@example.com` / `password123` |
+
+Register the customer on `/register` first if it doesn't exist yet.
 
 ## Notes
 
