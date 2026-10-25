@@ -28,6 +28,11 @@ frontend/   React app (pages, components, context, api client)
 
 Requirements: Node.js 18+ and a PostgreSQL database (a free [Neon](https://neon.com) project works well).
 
+```bash
+git clone https://github.com/Makostya19/events-ticket-booking.git
+cd events-ticket-booking
+```
+
 ### 1. Backend
 
 ```bash
@@ -49,7 +54,7 @@ npm run dev               # http://localhost:5000
 ```bash
 cd frontend
 npm install
-cp .env.example .env
+cp .env.example .env      # on Windows: copy .env.example .env
 npm run dev               # http://localhost:5173
 ```
 
@@ -73,10 +78,10 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 
 ## Demo credentials
 
-| Role     | Email                                              | Password               |
-| -------- | -------------------------------------------------- | ---------------------- |
-| Admin    | `admin@example.com`                                | `Admin12345`           |
-| Customer | register on `/register`, or create one via the API | any (min 8 characters) |
+| Role     | Email                   | Password               |
+| -------- | ----------------------- | ---------------------- |
+| Admin    | `admin@example.com`     | `Admin12345`           |
+| Customer | register on `/register` | any (min 8 characters) |
 
 The admin account is created by `npm run seed`. Change this password before deploying anywhere public.
 
